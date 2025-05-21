@@ -1,19 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Menucard = () => {
-  return (
-    <div>
+  return <div></div>;
+};
 
-
-
-        
-
-
-
-
-
-    </div>
-  )
-}
-
-export default Menucard
+export default Menucard;
