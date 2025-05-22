@@ -8,6 +8,7 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup"; // ⬅️ Import the Signup component
 import Gift from "./pages/Gift";
+import Thanks from "./pages/Thanks";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} /> {/* ⬅️ Add this route */}
         <Route path="/gift" element={<Gift />} />
+        <Route path="/thanks" element={<Thanks />} />
       </Routes>
     </>
   );

@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const menuData = {
   bestsellers: [
     {
@@ -5,7 +7,7 @@ const menuData = {
       name: "Caffè Latte",
       price: "₹199",
       image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937&auto=format&fit=crop",
     },
     {
       id: 2,
@@ -42,7 +44,7 @@ const menuData = {
       name: "Picco Cappuccino",
       price: "₹149",
       image:
-        "https://b.zmtcdn.com/data/dish_photos/80b/df82c9802c913fd60d4a7bd8811e980b.jpeg",
+        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
     },
   ],
   food: [
@@ -115,29 +117,49 @@ const menuData = {
     },
   ],
 };
+
+const fadeUp = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.4 } },
+};
+
 const Menu = () => {
   const handleAddToCart = (item) => {
     alert(`${item.name} added to cart!`);
-    // 🔜 In future: dispatch to cart context/store here
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-center text-green-800">
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
+        className="text-4xl font-bold mb-8 text-center text-green-800"
+      >
         Our Menu
-      </h1>
+      </motion.h1>
 
       {Object.entries(menuData).map(([section, items]) => (
         <section key={section} className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6 capitalize text-stone-950">
+          <motion.h2
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-2xl font-semibold mb-6 capitalize text-stone-950"
+          >
             {section.replace(/([A-Z])/g, " $1")}
-          </h2>
+          </motion.h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {items.map((item) => (
-              <div
+              <motion.div
                 key={item.id}
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition flex flex-col justify-between"
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
               >
                 <img
                   src={item.image}
@@ -153,14 +175,15 @@ const Menu = () => {
                       {item.price}
                     </div>
                   </div>
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => handleAddToCart(item)}
                     className="mt-4 bg-green-700 text-stone-950 px-4 py-2 rounded-md hover:bg-green-600 transition"
                   >
                     Add to Cart
-                  </button>
+                  </motion.button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </section>
@@ -168,4 +191,5 @@ const Menu = () => {
     </div>
   );
 };
+
 export default Menu;
