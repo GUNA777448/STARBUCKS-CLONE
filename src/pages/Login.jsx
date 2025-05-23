@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { app } from "../firebase"; // Make sure this points to your Firebase config
+
+const auth = getAuth(app);
 
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -31,10 +35,23 @@ const itemVariants = {
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", email, password);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("Logged in:", userCredential.user.uid);
+      navigate("/"); // 🔥 Send to home or dashboard
+    } catch (error) {
+      console.error("Login failed:", error.message);
+      navigate("/signup"); // Redirect to signup if login fails
+    }
   };
 
   return (
@@ -94,7 +111,7 @@ const Login = () => {
           className="mt-4 text-sm text-center text-gray-600"
           variants={itemVariants}
         >
-          Don't have an account?{" "}
+          Don’t have an account?{" "}
           <Link
             to="/signup"
             className="text-green-700 font-medium hover:underline"

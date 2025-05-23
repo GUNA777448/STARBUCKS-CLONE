@@ -1,122 +1,9 @@
 import { motion } from "framer-motion";
-
-const menuData = {
-  bestsellers: [
-    {
-      id: 1,
-      name: "Caffè Latte",
-      price: "₹199",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Cappuccino",
-      price: "₹179",
-      image:
-        "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 3,
-      name: "Double Chocolate Chip Frappuccino",
-      price: "₹479",
-      image:
-        "https://parade.com/.image/t_share/MjA5NjgwNjQyMTU2Mjc1MTMw/chocolate-chip-frappuccino.jpg",
-    },
-  ],
-  drinks: [
-    {
-      id: 4,
-      name: "Caramel Macchiato",
-      price: "₹229",
-      image:
-        "https://png.pngtree.com/thumb_back/fh260/background/20240408/pngtree-caramel-macchiato-coffee-cup-in-coffee-shop-image_15649984.jpg",
-    },
-    {
-      id: 5,
-      name: "Espresso",
-      price: "₹149",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 6,
-      name: "Picco Cappuccino",
-      price: "₹149",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
-    },
-  ],
-  food: [
-    {
-      id: 7,
-      name: "Blueberry Muffin",
-      price: "₹99",
-      image:
-        "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 8,
-      name: "Croissant",
-      price: "₹119",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhm_-rbRwV5QpDod3nhnJnH18Wp4_Zmo50aA&s",
-    },
-    {
-      id: 9,
-      name: "Espresso",
-      price: "₹149",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
-    },
-  ],
-  merchandise: [
-    {
-      id: 10,
-      name: "StarBrews Mug",
-      price: "₹499",
-      image:
-        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 11,
-      name: "Travel Tumbler",
-      price: "₹799",
-      image:
-        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 12,
-      name: "Espresso",
-      price: "₹149",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
-    },
-  ],
-  summerSpecials: [
-    {
-      id: 13,
-      name: "Iced Caramel Coffee",
-      price: "₹249",
-      image:
-        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 14,
-      name: "Cold Brew",
-      price: "₹199",
-      image:
-        "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 15,
-      name: "Espresso",
-      price: "₹149",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
-    },
-  ],
-};
+import { useCart } from "../components/CartContext";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import InteractiveAlert from "../components/InteractiveAlert";
 
 const fadeUp = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
@@ -124,8 +11,46 @@ const fadeUp = {
 };
 
 const Menu = () => {
+  const { addToCart } = useCart();
+  const [menuData, setMenuData] = useState({});
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const categories = ["bestsellers", "drinks", "food", "summerSpecials"];
+      const newMenuData = {};
+
+      for (const category of categories) {
+        const querySnapshot = await getDocs(collection(db, category));
+        newMenuData[category] = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+      }
+
+      setMenuData(newMenuData);
+    };
+
+    fetchMenu();
+  }, []);
+
   const handleAddToCart = (item) => {
-    alert(`${item.name} added to cart!`);
+    setSelectedItem(item);
+    setShowModal(true);
+  };
+
+  const confirmAddToCart = () => {
+    if (selectedItem) {
+      addToCart(selectedItem);
+    }
+    setShowModal(false);
+    setSelectedItem(null);
+  };
+
+  const cancelAddToCart = () => {
+    setShowModal(false);
+    setSelectedItem(null);
   };
 
   return (
@@ -188,6 +113,15 @@ const Menu = () => {
           </div>
         </section>
       ))}
+
+      {/* Interactive Confirmation Modal */}
+      <InteractiveAlert
+        show={showModal}
+        title="Add to Cart?"
+        message={`Are you sure you want to add "${selectedItem?.name}" to your cart?`}
+        onConfirm={confirmAddToCart}
+        onCancel={cancelAddToCart}
+      />
     </div>
   );
 };

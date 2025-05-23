@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useCart } from "../components/CartContext"; // Update this path if needed
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -24,16 +25,12 @@ const itemVariants = {
 };
 
 const Cart = () => {
-  // Dummy cart data (replace with real state later)
-  const cartItems = [
-    {
-      id: 1,
-      name: "Caffè Latte",
-      price: "₹199",
-      image:
-        "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1937&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-  ];
+  const { cartItems, removeFromCart } = useCart();
+
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
     <motion.div
@@ -84,10 +81,18 @@ const Cart = () => {
                     <h3 className="font-semibold text-stone-700">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-gray-600">{item.price}</p>
+                    <p className="text-sm text-gray-600">
+                      ${item.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Qty: {item.quantity}
+                    </p>
                   </div>
                 </div>
-                <button className="text-red-500 hover:text-red-700 font-medium">
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="text-red-500 hover:text-red-700 font-medium"
+                >
                   Remove
                 </button>
               </motion.li>
@@ -95,11 +100,14 @@ const Cart = () => {
           </ul>
 
           <motion.div
-            className="mt-8 text-right"
+            className="mt-6 text-right"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
+            <p className="text-xl font-bold text-green-800 mb-4">
+              Total: ${total.toFixed(2)}
+            </p>
             <Link
               to="/checkout"
               className="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition font-semibold"

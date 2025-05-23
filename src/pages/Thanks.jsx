@@ -20,11 +20,18 @@ const Thanks = () => {
         className="w-32 h-32 mb-6"
         whileHover={{ scale: 1.1 }}
       />
+
       <Link
         to="/"
         className="bg-green-700 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-600 transition"
       >
         🔙 Back to Home
+      </Link>
+      <Link
+        to="/menu"
+        className="bg-green-700 text-white px-6 py-3 m-4 rounded-full text-lg font-semibold hover:bg-green-600 transition"
+      >
+        Order Another 🔙
       </Link>
     </motion.div>
   );
