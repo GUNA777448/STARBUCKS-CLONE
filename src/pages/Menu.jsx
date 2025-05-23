@@ -97,7 +97,7 @@ const Menu = () => {
                       {item.name}
                     </h3>
                     <div className="text-green-700 font-bold mt-2">
-                      {item.price}
+                      ₹{item.price}
                     </div>
                   </div>
                   <motion.button

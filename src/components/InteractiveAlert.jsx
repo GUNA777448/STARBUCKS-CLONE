@@ -25,8 +25,8 @@ const InteractiveAlert = ({ show, title, message, onConfirm, onCancel }) => {
             className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full text-center"
             variants={modalVariants}
           >
-            <h2 className="text-2xl font-bold mb-4">{title}</h2>
-            <p className="mb-6">{message}</p>
+            <h2 className="text-2xl text-stone-900 font-bold mb-4">{title}</h2>
+            <p className="mb-6 text-stone-800">{message}</p>
             <div className="flex justify-center gap-6">
               <button
                 onClick={onCancel}
