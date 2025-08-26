@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { app, db } from "../firebase";
 import { motion } from "framer-motion";
@@ -41,6 +46,26 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
+    // Google sign-up logic
+    const handleGoogleSignup = async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        // Optionally create user doc in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          fullName: user.displayName || "",
+          email: user.email,
+          createdAt: new Date(),
+          provider: "google",
+        });
+        alert("✅ Google signup successful! Welcome to StarBevs 🌟");
+        navigate("/");
+      } catch (error) {
+        console.error("Google signup failed:", error.message);
+        alert("⚠️ Google signup failed: " + error.message);
+      }
+    };
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -152,8 +177,49 @@ const Signup = () => {
           </motion.button>
         </motion.form>
 
+        <motion.div
+          variants={itemVariants}
+          className="mt-4 flex flex-col items-center"
+        >
+          <button
+            type="button"
+            onClick={handleGoogleSignup}
+            className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2 shadow hover:bg-gray-100 transition mb-2"
+            style={{ fontWeight: "bold" }}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g>
+                <circle cx="12" cy="12" r="12" fill="#fff" />
+                <path
+                  d="M21.6 12.227c0-.818-.073-1.604-.209-2.364H12v4.482h5.352a4.58 4.58 0 0 1-1.98 3.004v2.494h3.2c1.872-1.724 2.928-4.267 2.928-7.616z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 22c2.43 0 4.47-.805 5.96-2.188l-3.2-2.494c-.89.6-2.03.96-3.26.96-2.51 0-4.64-1.697-5.4-3.98H2.01v2.5A9.997 9.997 0 0 0 12 22z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M6.6 14.298a5.996 5.996 0 0 1 0-3.596v-2.5H2.01a9.997 9.997 0 0 0 0 8.596l4.59-2.5z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 6.8c1.32 0 2.5.454 3.43 1.345l2.57-2.57C16.47 3.805 14.43 3 12 3A9.997 9.997 0 0 0 2.01 8.202l4.59 2.5C7.36 8.497 9.49 6.8 12 6.8z"
+                  fill="#EA4335"
+                />
+              </g>
+            </svg>
+            Continue with Google
+          </button>
+        </motion.div>
+
         <motion.p
-          className="mt-4 text-sm text-center text-gray-600"
+          className="mt-2 text-sm text-center text-gray-600"
           variants={itemVariants}
         >
           Already have an account?{" "}

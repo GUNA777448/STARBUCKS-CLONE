@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import ErrorPage from "./pages/ErrorPage";
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
@@ -21,9 +22,10 @@ const App = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} /> {/* ⬅️ Add this route */}
+        <Route path="/signup" element={<Signup />} />
         <Route path="/gift" element={<Gift />} />
         <Route path="/thanks" element={<Thanks />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
