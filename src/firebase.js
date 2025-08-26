@@ -1,26 +1,21 @@
-// firebase.js
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your Firebase config — keep this private, btw!
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBtMHCufbArY-_aaV7hrNFhNpj-pp9P7wY",
-  authDomain: "starbev-s.firebaseapp.com",
-  projectId: "starbev-s",
-  storageBucket: "starbev-s.appspot.com", // FIXED: storageBucket URL corrected here
-  messagingSenderId: "386881028885",
-  appId: "1:386881028885:web:d4036568140341932a5f1c",
-  measurementId: "G-P30DVSV1BC",
+  apiKey: "AIzaSyCdb1Fj8lGfKlJ5iqucVbBFa5xy8GcHZt8",
+  authDomain: "start-bevs.firebaseapp.com",
+  projectId: "start-bevs",
+  storageBucket: "start-bevs.firebasestorage.app",
+  messagingSenderId: "349042129566",
+  appId: "1:349042129566:web:048597dcb8a6e1fe86998f",
+  measurementId: "G-MFKZY4F60V"
 };
 
-// Initialize Firebase App
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Optional: Initialize Analytics if you want
 const analytics = getAnalytics(app);
-
-// Firestore Database reference
-const db = getFirestore(app);
-
-export { app, db };
